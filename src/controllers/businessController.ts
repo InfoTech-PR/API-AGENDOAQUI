@@ -12,7 +12,6 @@ export const registerBusiness = async (req: Request, res: Response) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         const nameUppercase = name.trim().toUpperCase();
 
-
         if (email) {
             if (!/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(email)) return res.status(400).json({ message: 'Formato de email inválido!' });
             const existingEmail = await Business.findOne({ where: { email } });
@@ -30,7 +29,7 @@ export const registerBusiness = async (req: Request, res: Response) => {
             name: nameUppercase,
             category,
             email,
-            phone,
+            phone: phone || null,
             user,
             password: hashedPassword
         });
