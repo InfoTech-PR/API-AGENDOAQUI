@@ -33,10 +33,31 @@ export const registerBusiness = async (req: Request, res: Response) => {
             user,
             password: hashedPassword
         });
-        return res.status(200).json({ message: 'Novo negócio registrado!' });
+        return res.status(200).json({ message: 'Cadastro enviado para aprovação. Entre em contato com a Infotech para confirmar seu cadastro dentro do sistema!' });
 
     } catch (error) {
         console.error('Erro ao fazer cadastro:', error);
+        return res.status(500).json({ message: 'Erro interno do servidor.' });
+    }
+};
+
+export const loginBusiness = async (req: Request, res: Response) => { 
+    try {
+        const { email, password, token } = req.body;
+
+        const business = await Business.findOne({ where: { email: email }});
+        if (!business) return res.status(401).json({ message: 'Credenciais inválidas ou usuário desativado.' });
+
+        if (token) {
+            const isTokenValid = await bcrypt.compare(token, business.token);
+            if (isTokenValid) return res.status(200).json({ message: 'Login feito com Sucesso (VIA TOKEN)!' });
+        }
+        
+        const isPasswordValid = await bcrypt.compare(password, business.password);
+        if (!isPasswordValid) return res.status(401).json({ message: 'Credenciais inválidas.' });
+        return res.status(200).json({ message: 'Login feito com Sucesso!' });
+    } catch (error) {
+        console.error('Erro ao fazer login:', error);
         return res.status(500).json({ message: 'Erro interno do servidor.' });
     }
 };

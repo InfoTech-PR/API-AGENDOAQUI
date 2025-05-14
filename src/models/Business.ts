@@ -8,6 +8,7 @@ export class Business extends Model {
   public email!: string;
   public phone!: string;
   public user!: string;
+  public token!: string;
   public password!: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -44,6 +45,10 @@ Business.init(
       }
     },
     user: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    token: {
       type: DataTypes.STRING,
       allowNull: false
     },
