@@ -1,4 +1,4 @@
 @echo off
 echo Conectando-se ao servidor e atualizando a API...
-ssh -t admin-agendoaqui@servidor.1nfotech.link  "cd htdocs && cd api.agendoaqui.infotech.app.br && cd API-AGENDOAQUI && git pull && npx tsc && pm2 restart API-AGENDOAQUI"
+ssh -t admin-agendoaqui@servidor.1nfotech.link  "cd htdocs && cd api-agendoaqui.infotech.app.br && cd API-AGENDOAQUI && git pull && npx tsc && pm2 restart API-AGENDOAQUI"
 pause
