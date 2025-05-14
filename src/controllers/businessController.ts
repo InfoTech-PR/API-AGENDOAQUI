@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { Business } from "models/Business";
+import { Business } from "../models/Business";
 import bcrypt from 'bcrypt';
 
 export const registerBusiness = async (req: Request, res: Response) => {
