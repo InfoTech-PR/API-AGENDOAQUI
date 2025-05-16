@@ -6,9 +6,9 @@ export class Business extends Model {
   public name!: string;
   public category!: string;
   public email!: string;
+  public active!: boolean;
   public phone!: string;
   public user!: string;
-  public token!: string;
   public password!: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -37,24 +37,25 @@ Business.init(
         isEmail: true
       }
     },
+    active: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
     phone: {
       type: DataTypes.STRING,
       allowNull: true,
       validate: {
-        len: [8, 20] // mínimo 8 caracteres, incluindo DDD
+        len: [8, 20]
       }
     },
     user: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    token: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       validate: {
         len: [8, 255],
         is: /^(?=.*[A-Za-z])(?=.*\d|[!@#$%^&*]).{8,}$/
