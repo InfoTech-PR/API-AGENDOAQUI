@@ -7,17 +7,20 @@ export const sendNewUserNotification = async (toEmail: string, newUserName: stri
     const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: Number(process.env.SMTP_PORT),
-        secure: false,
+        secure: true,
         auth: {
             user: process.env.SMTP_USER,
             pass: process.env.SMTP_PASS,
         },
+        tls: {
+            rejectUnauthorized: false
+        }
     });
 
     const approvalUrl = `${process.env.FRONTEND_URL}`;
 
     const mailOptions = {
-        from: '"Agendo Aqui - Infotech" <no-reply@serradomar.com>',
+        from: '"Agendo Aqui - Infotech" <agendoaqui@infotech-solucoes.com>',
         to: toEmail,
         subject: 'Novo usuário aguardando aprovação',
         html: `
