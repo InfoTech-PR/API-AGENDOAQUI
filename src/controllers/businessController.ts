@@ -2,7 +2,7 @@ import { Response, Request } from "express";
 import { Business } from "../models/Business";
 import bcrypt from 'bcrypt';
 import admin from '../services/firebase';
-import { sendNewUserNotification } from "services/mailService";
+import { sendNewUserNotification } from "../services/mailService";
 
 export const registerBusiness = async (req: Request, res: Response) => {
     try {
