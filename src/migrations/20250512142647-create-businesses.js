@@ -24,6 +24,11 @@ module.exports = {
           isEmail: true
         }
       },
+      role: {
+        type: Sequelize.ENUM('client', 'admin'),
+        allowNull: false,
+        defaultValue: 'client'
+      },      
       phone: {
         type: Sequelize.STRING,
         allowNull: true

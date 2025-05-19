@@ -6,6 +6,7 @@ export class Business extends Model {
   public name!: string;
   public category!: string;
   public email!: string;
+  public role!: string;
   public active!: boolean;
   public phone!: string;
   public user!: string;
@@ -36,6 +37,11 @@ Business.init(
       validate: {
         isEmail: true
       }
+    },
+    role: {
+      type: DataTypes.ENUM('client', 'admin'),
+      allowNull: false,
+      defaultValue: 'client'
     },
     active: {
       type: DataTypes.BOOLEAN,

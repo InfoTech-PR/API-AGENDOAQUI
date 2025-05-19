@@ -3,6 +3,10 @@ import { Business } from "../models/Business";
 import bcrypt from 'bcrypt';
 import admin from '../services/firebase';
 import { sendNewUserNotification } from "../services/mailService";
+import jwt from 'jsonwebtoken';
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const registerBusiness = async (req: Request, res: Response) => {
     try {
@@ -53,6 +57,7 @@ export const registerBusiness = async (req: Request, res: Response) => {
 export const loginBusiness = async (req: Request, res: Response) => { 
     try {
         const { email, password, token } = req.body;
+        const JWT_SECRET = process.env.JWT_SECRET;
 
         if (token) {
             const decodedToken = await admin.auth().verifyIdToken(token);
@@ -64,7 +69,23 @@ export const loginBusiness = async (req: Request, res: Response) => {
             const isActive = await Business.findOne({ where: { active: true } });
             if (!isActive) return res.status(401).json({ message: "Sua conta está em avaliação!" })
         
-            return res.status(200).json({ message: 'Login feito com Sucesso (VIA TOKEN)!' });
+            const tokenPayload = { id: business.id };
+            const tokenJwt = jwt.sign(tokenPayload, JWT_SECRET as string, { expiresIn: '30d' });
+            
+            const userData = {
+                name: business.name,
+                category: business.category,
+                email: business.email,
+                phone: business.phone,
+                user: business.user,
+                role: business.role
+            };
+            
+            return res.status(200).json({
+                message: 'Login feito com Sucesso!',
+                token: tokenJwt,
+                user: userData
+            });
         }
         
         if (!password) return res.status(400).json({ message: 'Senha é obrigatória quando não usar token.' });
@@ -78,7 +99,23 @@ export const loginBusiness = async (req: Request, res: Response) => {
         const isActive = await Business.findOne({ where: { active: true } });
         if (!isActive) return res.status(401).json({ message: "Sua conta está em avaliação!" })
 
-        return res.status(200).json({ message: 'Login feito com Sucesso!' });
+        const tokenPayload = { id: business.id };
+        const tokenJwt = jwt.sign(tokenPayload, JWT_SECRET as string, { expiresIn: '30d' });
+        
+        const userData = {
+            name: business.name,
+            category: business.category,
+            email: business.email,
+            phone: business.phone,
+            user: business.user,
+            role: business.role
+        };
+        
+        return res.status(200).json({
+            message: 'Login feito com Sucesso!',
+            token: tokenJwt,
+            user: userData
+        });
     } catch (error) {
         console.error('Erro ao fazer login:', error);
         return res.status(500).json({ message: 'Erro interno do servidor.' });
