@@ -7,6 +7,9 @@ export class Client extends Model {
   public email!: string;
   public phone!: string;
   public dob!: Date;
+  public user!: string;
+  public password!: string;
+  public business!: number;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
@@ -40,7 +43,26 @@ Client.init(
     dob: {
       type: DataTypes.DATE,
       allowNull: true,
-    }
+    },
+    user: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    business: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+      references: {
+        model: 'Businesses',
+        key: 'id',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'RESTRICT',
+    },
   },
   {
     sequelize,

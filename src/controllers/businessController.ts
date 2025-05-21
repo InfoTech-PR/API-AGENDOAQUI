@@ -73,6 +73,7 @@ export const loginBusiness = async (req: Request, res: Response) => {
             const tokenJwt = jwt.sign(tokenPayload, JWT_SECRET as string, { expiresIn: '30d' });
             
             const userData = {
+                id: business.id,
                 name: business.name,
                 category: business.category,
                 email: business.email,
@@ -103,6 +104,7 @@ export const loginBusiness = async (req: Request, res: Response) => {
         const tokenJwt = jwt.sign(tokenPayload, JWT_SECRET as string, { expiresIn: '30d' });
         
         const userData = {
+            id: business.id,
             name: business.name,
             category: business.category,
             email: business.email,

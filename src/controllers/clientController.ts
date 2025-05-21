@@ -1,10 +1,12 @@
 import { Response, Request } from "express";
 import { Client } from "../models/Client";
-import { sendNewUserNotification } from "../services/mailService";
+import { Business } from "../models/Business";
+import { sendNewUserNotificationActive } from "../services/mailService";
+import { generateUsername, generatePassword } from "../utils/authUtils";
 
 export const registerClient = async (req: Request, res: Response) => {
     try {
-        const { name, dob, email, phone } = req.body;
+        const { name, dob, email, phone, business } = req.body;
 
         if (!name) return res.status(400).json({ message: 'Campos obrigatórios: name' });
         if (!(email || phone)) return res.status(400).json({ message: 'Pelo menos um dos campos (email ou telefone) deve ser preenchido!' });
@@ -22,17 +24,26 @@ export const registerClient = async (req: Request, res: Response) => {
             if (existingPhone) return res.status(400).json({ message: 'Telefone já cadastrado!' });
         }
 
+        const username = generateUsername(nameUppercase);
+        const password = generatePassword();
+        const nameBusiness = await Business.findOne({ where: { id: business }, attributes: ['name'], raw: true });
+
+        try {
+            await sendNewUserNotificationActive(email, nameBusiness ? nameBusiness.name : '', username, password);
+        } catch (error) {
+            return res.status(500).json({ message: 'Email em formato invalido ou não existe!' });
+        }
+
         await Client.create({
             name: nameUppercase,
+            business,
             dob,
             email,
             phone: phone || null,
+            user: username,
+            password: password
         });
 
-        // const managers = await User.findAll({ where: { role: 'admin' } });
-        // for (const manager of managers) {
-        //     await sendNewUserNotification(manager, name, email);
-        // }
         
         return res.status(200).json({ message: 'Cadastro realizado com sucesso!' });
     } catch (error) {
