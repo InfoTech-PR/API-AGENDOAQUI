@@ -43,7 +43,7 @@ export const registerClient = async (req: Request, res: Response) => {
             phone: phone || null,
             user: username,
             password: password,
-            createdBy: nameBusiness
+            createdBy: nameBusiness?.name || ''
         });
 
         return res.status(200).json({ message: 'Cadastro realizado com sucesso!' });
