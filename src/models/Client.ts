@@ -8,6 +8,8 @@ export class Client extends Model {
   public phone!: string;
   public dob!: Date;
   public user!: string;
+  public createdBy!: string;
+  public active!: boolean;
   public password!: string;
   public business!: number;
   public readonly createdAt!: Date;
@@ -48,6 +50,14 @@ Client.init(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
+    },
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    },
+    createdBy: {
+      type: DataTypes.STRING,
+      allowNull: false
     },
     password: {
       type: DataTypes.STRING,

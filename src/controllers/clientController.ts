@@ -39,12 +39,13 @@ export const registerClient = async (req: Request, res: Response) => {
             business,
             dob,
             email,
+            active: true,
             phone: phone || null,
             user: username,
-            password: password
+            password: password,
+            createdBy: nameBusiness
         });
 
-        
         return res.status(200).json({ message: 'Cadastro realizado com sucesso!' });
     } catch (error) {
         console.error('Erro ao fazer cadastro:', error);
@@ -64,4 +65,15 @@ export const getAllClients = async (req: Request, res: Response) => {
         console.error('Erro ao buscar clientes:', error);
         return res.status(500).json({ message: 'Erro interno do servidor.' });
       }
+};
+
+export const getClientById = async (req: Request, res: Response) => { 
+    const { id } = req.params;
+    try {
+        const client = await Client.findOne({where: { id: id }});
+        return res.status(200).json(client);
+    } catch (error) {
+        console.error('Erro ao buscar clientes:', error);
+        return res.status(500).json({ message: 'Erro interno do servidor.' });
+    }
 };
