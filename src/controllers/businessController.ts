@@ -37,7 +37,8 @@ export const registerBusiness = async (req: Request, res: Response) => {
             email,
             phone: phone || null,
             user,
-            password: hashedPassword
+            password: hashedPassword,
+            active: false,
         });
 
         // const managers = await User.findAll({ where: { role: 'admin' } });

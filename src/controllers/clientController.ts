@@ -6,7 +6,7 @@ import { generateUsername, generatePassword } from "../utils/authUtils";
 
 export const registerClient = async (req: Request, res: Response) => {
     try {
-        const { name, dob, email, phone, business } = req.body;
+        const { name, dob, email, phone, businessId } = req.body;
 
         if (!name) return res.status(400).json({ message: 'Campos obrigatórios: name' });
         if (!(email || phone)) return res.status(400).json({ message: 'Pelo menos um dos campos (email ou telefone) deve ser preenchido!' });
@@ -26,7 +26,7 @@ export const registerClient = async (req: Request, res: Response) => {
 
         const username = generateUsername(nameUppercase);
         const password = generatePassword();
-        const nameBusiness = await Business.findOne({ where: { id: business }, attributes: ['name'], raw: true });
+        const nameBusiness = await Business.findOne({ where: { id: businessId }, attributes: ['name'], raw: true });
 
         try {
             await sendNewUserNotificationActive(email, nameBusiness ? nameBusiness.name : '', username, password);
@@ -36,7 +36,7 @@ export const registerClient = async (req: Request, res: Response) => {
 
         await Client.create({
             name: nameUppercase,
-            business,
+            businessId,
             dob,
             email,
             active: true,

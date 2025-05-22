@@ -17,6 +17,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true
       },
+      user: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       phone: {
         type: Sequelize.STRING,
         allowNull: true
@@ -24,6 +28,28 @@ module.exports = {
       dob: {
         type: Sequelize.DATE,
         allowNull: true
+      },
+      password: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      active: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true
+      },
+      businessId: {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull: false,
+        references: {
+          model: 'Businesses',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'RESTRICT'
+      },
+      createdBy: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

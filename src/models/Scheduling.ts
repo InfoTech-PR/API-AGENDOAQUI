@@ -6,6 +6,7 @@ export class Scheduling extends Model {
   public date!: Date;     
   public time!: string;        
   public serviceId!: number;
+  public businessId!: number;
   public clientId!: number;
   public observations?: string | null;
 
@@ -40,6 +41,16 @@ Scheduling.init(
       allowNull: false,
       references: {
         model: 'Services',
+        key: 'id',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'RESTRICT',
+    },
+    businessId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+      references: {
+        model: 'Businesses',
         key: 'id',
       },
       onUpdate: 'CASCADE',

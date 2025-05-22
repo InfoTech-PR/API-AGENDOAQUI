@@ -11,7 +11,7 @@ export class Client extends Model {
   public createdBy!: string;
   public active!: boolean;
   public password!: string;
-  public business!: number;
+  public businessId!: number;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
@@ -63,7 +63,7 @@ Client.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    business: {
+    businessId: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       references: {
