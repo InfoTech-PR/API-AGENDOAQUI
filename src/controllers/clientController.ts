@@ -53,6 +53,45 @@ export const registerClient = async (req: Request, res: Response) => {
     }
 };
 
+export const updateClient = async (req: Request, res: Response) => {
+    try {
+        const { id, name, dob, email, phone } = req.body;
+
+        if (!id) return res.status(400).json({ message: 'Campo obrigatório: id' });
+        if (!name) return res.status(400).json({ message: 'Campo obrigatório: name' });
+        if (!(email || phone)) return res.status(400).json({ message: 'Pelo menos um dos campos (email ou telefone) deve ser preenchido!' });
+
+        const nameUppercase = name.trim().toUpperCase();
+
+        const client = await Client.findOne({ where: { id } });
+        if (!client) return res.status(404).json({ message: 'Cliente não encontrado!' });
+
+        if (email && email !== client.email) {
+            if (!/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(email)) return res.status(400).json({ message: 'Formato de email inválido!' });
+            const existingEmail = await Client.findOne({ where: { email } });
+            if (existingEmail) return res.status(400).json({ message: 'Email já cadastrado!' });
+        }
+
+        if (phone && phone !== client.phone) {
+            if (!/^\(?\d{2}\)?\s?9\d{4}[-\s]?\d{4}$/.test(phone)) return res.status(400).json({ message: 'Formato de telefone inválido!' });
+            const existingPhone = await Client.findOne({ where: { phone } });
+            if (existingPhone) return res.status(400).json({ message: 'Telefone já cadastrado!' });
+        }
+
+        client.name = nameUppercase;
+        client.dob = dob;
+        client.email = email;
+        client.phone = phone || null;
+
+        await client.save();
+
+        return res.status(200).json({ message: 'Cliente atualizado com sucesso!' });
+    } catch (error) {
+        console.error('Erro ao atualizar cliente:', error);
+        return res.status(500).json({ message: 'Erro interno do servidor.' });
+    }
+};
+
 export const getAllClients = async (req: Request, res: Response) => { 
     try {
         const clients = await Client.findAll({
