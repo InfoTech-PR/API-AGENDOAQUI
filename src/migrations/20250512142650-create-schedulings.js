@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.DATEONLY,
         allowNull: false
       },
-      time: {
+      hour: {
         type: Sequelize.TIME,
         allowNull: false
       },

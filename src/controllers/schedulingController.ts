@@ -1,55 +1,46 @@
 import { Response, Request } from "express";
 import { Business } from "../models/Business";
+import { Client } from "../models/Client";
 import { Scheduling } from "models/Scheduling";
+import { sendNewUserNotificationActive } from "services/mailService";
+import { Service } from "models/Service";
 
-// export const registerScheduling = async (req: Request, res: Response) => {
-//     try {
-//         const { name, dob, email, phone, business } = req.body;
+export const registerScheduling = async (req: Request, res: Response) => {
+  try {
+    const { date, hour, serviceId, clientId, businessId, obs } = req.body;
 
-//         if (!name) return res.status(400).json({ message: 'Campos obrigatórios: name' });
-//         if (!(email || phone)) return res.status(400).json({ message: 'Pelo menos um dos campos (email ou telefone) deve ser preenchido!' });
+    if (!date || !hour || !serviceId || !clientId) return res.status(400).json({ message: 'Todos os campos são obrigatórios!' });
+    
+    const existinClient = await Client.findOne({ where: { id: clientId } })
+    if (!existinClient) return res.status(400).json({ message: 'Cliente não existe!' });
 
-//         const nameUppercase = name.trim().toUpperCase();
+    const existingService = await Service.findOne({ where: { id: serviceId} })
+    if (!existingService) return res.status(400).json({ message: 'Serviço não existe!' });
 
-//         if (email) {
-//             if (!/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(email)) return res.status(400).json({ message: 'Formato de email inválido!' });
-//             const existingEmail = await Client.findOne({ where: { email } });
-//             if (existingEmail) return res.status(400).json({ message: 'Email já cadastrado!' });
-//         }
-//         if (phone) {
-//             if (!/^\(?\d{2}\)?\s?9\d{4}[-\s]?\d{4}$/.test(phone)) return res.status(400).json({ message: 'Formato de telefone inválido!' });
-//             const existingPhone = await Client.findOne({ where: { phone } });
-//             if (existingPhone) return res.status(400).json({ message: 'Telefone já cadastrado!' });
-//         }
+    const existingBusiness = await Business.findOne({ where: { id: businessId} })
+    if (!existingBusiness) return res.status(400).json({ message: 'Negócio não existe!' });
 
-//         const username = generateUsername(nameUppercase);
-//         const password = generatePassword();
-//         const nameBusiness = await Business.findOne({ where: { id: business }, attributes: ['name'], raw: true });
+    // try {
+    //     await sendNewUserNotificationActive(email, nameBusiness ? nameBusiness.name : '', username, password);
+    // } catch (error) {
+    //     return res.status(500).json({ message: 'Email em formato invalido ou não existe!' });
+    // }
 
-//         try {
-//             await sendNewUserNotificationActive(email, nameBusiness ? nameBusiness.name : '', username, password);
-//         } catch (error) {
-//             return res.status(500).json({ message: 'Email em formato invalido ou não existe!' });
-//         }
+    await Scheduling.create({
+      date,
+      hour,
+      serviceId,
+      clientId,
+      businessId,
+      observations: obs
+    });
 
-//         await Client.create({
-//             name: nameUppercase,
-//             business,
-//             dob,
-//             email,
-//             active: true,
-//             phone: phone || null,
-//             user: username,
-//             password: password,
-//             createdBy: nameBusiness?.name || ''
-//         });
-
-//         return res.status(200).json({ message: 'Cadastro realizado com sucesso!' });
-//     } catch (error) {
-//         console.error('Erro ao fazer cadastro:', error);
-//         return res.status(500).json({ message: 'Erro interno do servidor.' });
-//     }
-// };
+    return res.status(200).json({ message: 'Cadastro realizado com sucesso!' });
+  } catch (error) {
+    console.error('Erro ao fazer cadastro:', error);
+    return res.status(500).json({ message: 'Erro interno do servidor.' });
+  }
+};
 
 // export const updateScheduling = async (req: Request, res: Response) => {
 //     try {

@@ -4,7 +4,7 @@ import { sequelize } from '../instances/mysql';
 export class Scheduling extends Model {
   public id!: number;
   public date!: Date;     
-  public time!: string;        
+  public hour!: string;        
   public serviceId!: number;
   public businessId!: number;
   public clientId!: number;
@@ -29,11 +29,11 @@ Scheduling.init(
         isDate: true,
       },
     },
-    time: {
+    hour: {
       type: DataTypes.TIME,
       allowNull: false,
       validate: {
-        is: /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/, 
+        is: /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 
       },
     },
     serviceId: {

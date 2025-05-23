@@ -116,3 +116,14 @@ export const getClientById = async (req: Request, res: Response) => {
         return res.status(500).json({ message: 'Erro interno do servidor.' });
     }
 };
+
+export const getAllClientsByBusiness = async (req: Request, res: Response) => { 
+    const { id } = req.params;
+    try {
+        const clients = await Client.findAll({where: { id: id }});
+        return res.status(200).json(clients);
+    } catch (error) {
+        console.error('Erro ao buscar clientes:', error);
+        return res.status(500).json({ message: 'Erro interno do servidor.' });
+    }
+};
