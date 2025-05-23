@@ -5,6 +5,7 @@ import cors from "cors";
 import apiRoutes from "./routes/Routes";
 import swaggerUI from 'swagger-ui-express';
 import swaggerDocument from '../swagger.json';
+import './models/associations';
 
 dotenv.config();
 

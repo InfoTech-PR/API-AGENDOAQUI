@@ -82,23 +82,29 @@ export const registerScheduling = async (req: Request, res: Response) => {
 // };
 
 export const getAllSchedulingsByBusinessId = async (req: Request, res: Response) => { 
-    try {
-        const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-        const existingBusiness = await Business.findOne({ where: { id } });
-        if (!existingBusiness) return res.status(400).json({ message: 'Negócio não encontrado' });
+    const existingBusiness = await Business.findOne({ where: { id } });
+    if (!existingBusiness) return res.status(400).json({ message: 'Negócio não encontrado' });
 
-        const schedulings = await Scheduling.findAll({
-            where: { businessId: id}
-        });
+    const schedulings = await Scheduling.findAll({
+      where: { businessId: id },
+      include: [
+        { model: Client, attributes: ['name'] },
+        { model: Service, attributes: ['name'] }
+      ]
+    });
 
-        if (!schedulings || schedulings.length === 0) return res.status(200).json({ message: 'Nenhum agendamento encontrado para este negócio.' });
-    
-        return res.status(200).json(schedulings);
-      } catch (error) {
-        console.error('Erro ao buscar agendamentos:', error);
-        return res.status(500).json({ message: 'Erro interno do servidor.' });
-      }
+    if (!schedulings || schedulings.length === 0) {
+      return res.status(200).json({ message: 'Nenhum agendamento encontrado para este negócio.' });
+    }
+
+    return res.status(200).json(schedulings);
+  } catch (error) {
+    console.error('Erro ao buscar agendamentos:', error);
+    return res.status(500).json({ message: 'Erro interno do servidor.' });
+  }
 };
 
 // export const getSchedulingById = async (req: Request, res: Response) => { 
