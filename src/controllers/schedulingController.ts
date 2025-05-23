@@ -1,9 +1,9 @@
 import { Response, Request } from "express";
 import { Business } from "../models/Business";
 import { Client } from "../models/Client";
-import { Scheduling } from "models/Scheduling";
+import { Scheduling } from "../models/Scheduling";
 import { sendNewUserNotificationActive } from "services/mailService";
-import { Service } from "models/Service";
+import { Service } from "../models/Service";
 
 export const registerScheduling = async (req: Request, res: Response) => {
   try {
