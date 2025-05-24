@@ -107,13 +107,13 @@ export const getAllSchedulingsByBusinessId = async (req: Request, res: Response)
   }
 };
 
-// export const getSchedulingById = async (req: Request, res: Response) => { 
-//     const { id } = req.params;
-//     try {
-//         const client = await Client.findOne({where: { id: id }});
-//         return res.status(200).json(client);
-//     } catch (error) {
-//         console.error('Erro ao buscar clientes:', error);
-//         return res.status(500).json({ message: 'Erro interno do servidor.' });
-//     }
-// };
+export const getSchedulingById = async (req: Request, res: Response) => { 
+    const { id } = req.params;
+    try {
+        const scheduling = await Scheduling.findOne({where: { id: id }});
+        return res.status(200).json(scheduling);
+    } catch (error) {
+        console.error('Erro ao buscar agendamento:', error);
+        return res.status(500).json({ message: 'Erro interno do servidor.' });
+    }
+};
