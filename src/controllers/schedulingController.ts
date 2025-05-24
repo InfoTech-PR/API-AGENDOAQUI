@@ -42,44 +42,37 @@ export const registerScheduling = async (req: Request, res: Response) => {
   }
 };
 
-// export const updateScheduling = async (req: Request, res: Response) => {
-//     try {
-//         const { id, name, dob, email, phone } = req.body;
+export const updateScheduling = async (req: Request, res: Response) => {
+  try {
+    const { id, date, hour, serviceId, clientId, businessId, obs } = req.body;
 
-//         if (!id) return res.status(400).json({ message: 'Campo obrigatório: id' });
-//         if (!name) return res.status(400).json({ message: 'Campo obrigatório: name' });
-//         if (!(email || phone)) return res.status(400).json({ message: 'Pelo menos um dos campos (email ou telefone) deve ser preenchido!' });
+    if (!id || !date || !hour || !serviceId || !clientId) return res.status(400).json({ message: 'Todos os campos são obrigatórios!' });
 
-//         const nameUppercase = name.trim().toUpperCase();
+    const scheduling = await Scheduling.findOne({ where: { id } });
+    if (!scheduling) return res.status(404).json({ message: 'Agendamento não encontrado!' });
 
-//         const client = await Client.findOne({ where: { id } });
-//         if (!client) return res.status(404).json({ message: 'Cliente não encontrado!' });
+    const existinClient = await Client.findOne({ where: { id: clientId } })
+    if (!existinClient) return res.status(400).json({ message: 'Cliente não existe!' });
 
-//         if (email && email !== client.email) {
-//             if (!/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(email)) return res.status(400).json({ message: 'Formato de email inválido!' });
-//             const existingEmail = await Client.findOne({ where: { email } });
-//             if (existingEmail) return res.status(400).json({ message: 'Email já cadastrado!' });
-//         }
+    const existingService = await Service.findOne({ where: { id: serviceId} })
+    if (!existingService) return res.status(400).json({ message: 'Serviço não existe!' });
 
-//         if (phone && phone !== client.phone) {
-//             if (!/^\(?\d{2}\)?\s?9\d{4}[-\s]?\d{4}$/.test(phone)) return res.status(400).json({ message: 'Formato de telefone inválido!' });
-//             const existingPhone = await Client.findOne({ where: { phone } });
-//             if (existingPhone) return res.status(400).json({ message: 'Telefone já cadastrado!' });
-//         }
+    const existingBusiness = await Business.findOne({ where: { id: businessId} })
+    if (!existingBusiness) return res.status(400).json({ message: 'Negócio não existe!' });
 
-//         client.name = nameUppercase;
-//         client.dob = dob;
-//         client.email = email;
-//         client.phone = phone || null;
+    scheduling.date = date;
+    scheduling.hour = hour;
+    scheduling.serviceId = serviceId;
+    scheduling.clientId = clientId;
 
-//         await client.save();
+    await scheduling.save();
 
-//         return res.status(200).json({ message: 'Cliente atualizado com sucesso!' });
-//     } catch (error) {
-//         console.error('Erro ao atualizar cliente:', error);
-//         return res.status(500).json({ message: 'Erro interno do servidor.' });
-//     }
-// };
+    return res.status(200).json({ message: 'Agendamento atualizado com sucesso!' });
+  } catch (error) {
+    console.error('Erro ao atualizar cliente:', error);
+    return res.status(500).json({ message: 'Erro interno do servidor.' });
+  }
+};
 
 export const getAllSchedulingsByBusinessId = async (req: Request, res: Response) => { 
   try {
