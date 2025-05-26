@@ -6,7 +6,7 @@ import { sendCanceledScheduling } from "../services/mailService";
 import { Client } from "../models/Client";
 import { Business } from "../models/Business";
 import { Service } from "../models/Service";
-
+//
 export const createSchedulingCancel = async (req: Request, res: Response) => {
   try {
     const { schedulingId, cancelledById, cancelledByType, cancelDescription } = req.body;
