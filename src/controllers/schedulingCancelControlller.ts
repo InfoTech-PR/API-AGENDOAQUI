@@ -3,9 +3,9 @@ import { format } from 'date-fns';
 import { SchedulingCancel } from "../models/SchedulingCancel";
 import { Scheduling } from "../models/Scheduling";
 import { sendCanceledScheduling } from "../services/mailService";
-import { Client } from "models/Client";
-import { Business } from "models/Business";
-import { Service } from "models/Service";
+import { Client } from "../models/Client";
+import { Business } from "../models/Business";
+import { Service } from "../models/Service";
 
 export const createSchedulingCancel = async (req: Request, res: Response) => {
   try {
