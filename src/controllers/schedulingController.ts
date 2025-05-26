@@ -4,7 +4,7 @@ import { Client } from "../models/Client";
 import { Scheduling } from "../models/Scheduling";
 import { sendNewUserNotificationActive } from "services/mailService";
 import { Service } from "../models/Service";
-import { SchedulingCancel } from "models/SchedulingCancel";
+import { SchedulingCancel } from "../models/SchedulingCancel";
 
 export const registerScheduling = async (req: Request, res: Response) => {
   try {
