@@ -4,6 +4,7 @@ import { Client } from "../models/Client";
 import { Scheduling } from "../models/Scheduling";
 import { sendNewUserNotificationActive } from "services/mailService";
 import { Service } from "../models/Service";
+import { SchedulingCancel } from "models/SchedulingCancel";
 
 export const registerScheduling = async (req: Request, res: Response) => {
   try {
@@ -93,7 +94,32 @@ export const getAllSchedulingsByBusinessId = async (req: Request, res: Response)
       return res.status(200).json({ message: 'Nenhum agendamento encontrado para este negócio.' });
     }
 
-    return res.status(200).json(schedulings);
+    const results = await Promise.all(schedulings.map(async (scheduling) => {
+      let nameWhoCanceled = null;
+
+      if (scheduling.canceled) {
+        const cancel = await SchedulingCancel.findOne({
+          where: { schedulingId: scheduling.id }
+        });
+
+        if (cancel) {
+          if (cancel.cancelledByType === 'client') {
+            const client = await Client.findByPk(cancel.cancelledById);
+            if (client) nameWhoCanceled = client.name;
+          } else if (cancel.cancelledByType === 'business') {
+            const business = await Business.findByPk(cancel.cancelledById);
+            if (business) nameWhoCanceled = business.name;
+          }
+        }
+      }
+      return {
+        ...scheduling.toJSON(),
+        nameWhoCanceled
+      };
+    }));
+
+    return res.status(200).json(results);
+    
   } catch (error) {
     console.error('Erro ao buscar agendamentos:', error);
     return res.status(500).json({ message: 'Erro interno do servidor.' });

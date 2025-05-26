@@ -9,6 +9,7 @@ export class Scheduling extends Model {
   public businessId!: number;
   public clientId!: number;
   public observations?: string | null;
+  public canceled?: boolean;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -70,6 +71,11 @@ Scheduling.init(
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    canceled: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    }
   },
   {
     sequelize,

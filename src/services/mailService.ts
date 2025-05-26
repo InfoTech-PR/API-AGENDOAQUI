@@ -110,6 +110,49 @@ export const sendNewUserNotificationActive = async (toEmail: string, business: s
     };
 
     await transporter.sendMail(mailOptions);
+}; 
+
+export const sendCanceledScheduling = async (toEmail: string, business: string, schedulingType: string, schedulingDate: String, schedulingHour: string) => {
+    const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT),
+        secure: true,
+        auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
+        },
+        tls: {
+            rejectUnauthorized: false
+        }
+    });
+
+    const url = `${process.env.FRONTEND_URL}`;
+
+    const mailOptions = {
+        from: '"Agendo Aqui - Infotech" <agendoaqui@infotech-solucoes.com>',
+        to: toEmail,
+        subject: `Aviso de Cancelamento do Agendamento - ${business}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 40px;">
+            <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); overflow: hidden;">
+              <div style="background-color: rgb(220, 53, 69); padding: 20px; color: white; text-align: center;">
+                <h2 style="margin: 0;">Agendamento Cancelado</h2>
+              </div>
+              <div style="padding: 30px; color: #333;">
+                <p>Olá,</p>
+                <p>Informamos que seu agendamento para o serviço <strong>${schedulingType}</strong> no dia <strong>${schedulingDate}</strong> às <strong>${schedulingHour}</strong> foi <span style="color: red; font-weight: bold;">cancelado</span>.</p>
+                <p>Se você não solicitou este cancelamento ou precisa de mais informações, por favor, entre em contato com a empresa <strong>${business}</strong>.</p>
+                <p>Agradecemos pela compreensão.</p>
+              </div>
+              <div style="background-color: #f0f0f0; padding: 20px; text-align: center; font-size: 12px; color: #999;">
+                © ${new Date().getFullYear()} Infotech - Soluções Tecnológicas
+              </div>
+            </div>
+          </div>
+        `,
+      };
+
+    await transporter.sendMail(mailOptions);
 };
 
 // export const sendNewUserNotificationInactive = async (toEmail: string, newUserName: string) => {
