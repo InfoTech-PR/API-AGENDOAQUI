@@ -2,6 +2,7 @@ import { Scheduling } from './Scheduling';
 import { Client } from './Client';
 import { Service } from './Service';
 import { SchedulingCancel } from './SchedulingCancel';
+import { Business } from './Business';
 
 Scheduling.belongsTo(Client, { foreignKey: 'clientId' });
 Scheduling.belongsTo(Service, { foreignKey: 'serviceId' });
@@ -11,3 +12,6 @@ Service.hasMany(Scheduling, { foreignKey: 'serviceId' });
 
 SchedulingCancel.belongsTo(Scheduling, { foreignKey: "schedulingId" });
 Scheduling.hasMany(SchedulingCancel, { foreignKey: "schedulingId" });
+
+Service.belongsTo(Business, { foreignKey: "id_business" });
+Business.hasMany(Service, { foreignKey: "id_business" });

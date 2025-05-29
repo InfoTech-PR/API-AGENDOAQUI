@@ -9,13 +9,29 @@ module.exports = {
         primaryKey: true,
         allowNull: false,
       },
+      id_business: {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull: false,
+      },
+      image: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       name: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      description: {
+      sumary: {
         type: Sequelize.TEXT,
         allowNull: true,
+      },
+      price: {
+        type: Sequelize.DECIMAL(10, 2),
+        allowNull: false,
+      },
+      duration: {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -25,7 +41,7 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
       },
     });
   },
