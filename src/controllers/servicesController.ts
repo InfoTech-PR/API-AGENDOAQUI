@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
 import { Service } from "../models/Service";
-import { Business } from "models/Business";
+import { Business } from "../models/Business";
 
 export const getAllServicesByBusiness = async (req: Request, res: Response) => { 
     const { id } = req.params;
