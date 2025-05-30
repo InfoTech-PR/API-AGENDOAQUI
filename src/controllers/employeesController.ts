@@ -1,17 +1,15 @@
 import { Response, Request } from "express";
-import { Service } from "../models/Service";
+import { Employees } from "../models/Employees";
 import { Business } from "../models/Business";
 
-export const registerService = async (req: Request, res: Response) => {
+export const registerEmployees = async (req: Request, res: Response) => {
   try {
-    const { id_business, name, summary, price, duration } = req.body;
-    const image = req.file ? `/uploads/services/${req.file.filename}` : null;
+    const { id_business, name, summary, specialization } = req.body;
+    const image = req.file ? `/uploads/employees/${req.file.filename}` : null;
 
     const idBusinessNum = Number(id_business);
-    const priceNum = Number(price);
-    const durationNum = Number(duration);
 
-    if (!idBusinessNum || !name || !priceNum || !durationNum || isNaN(idBusinessNum) || isNaN(priceNum) || isNaN(durationNum)) {
+    if (!idBusinessNum || !name || !specialization || isNaN(idBusinessNum)) {
       return res.status(400).json({ message: 'Campos obrigatórios inválidos ou vazios!' });
     }
 
@@ -19,17 +17,16 @@ export const registerService = async (req: Request, res: Response) => {
     if (!existingBusiness)
       return res.status(400).json({ message: 'Negócio não existe!' });
 
-    const existingService = await Service.findOne({ where: { name } });
-    if (existingService)
-      return res.status(400).json({ message: 'Serviço com esse nome já existe!' });
+    const existingEmployee = await Employees.findOne({ where: { name } });
+    if (existingEmployee)
+      return res.status(400).json({ message: 'Funcionário com esse nome já existe!' });
 
-    await Service.create({
+    await Employees.create({
       id_business,
       image,
       name,
       summary,
-      price,
-      duration
+      specialization
     });
 
     return res.status(200).json({ message: 'Cadastro realizado com sucesso!' });
@@ -39,11 +36,11 @@ export const registerService = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllServicesByBusiness = async (req: Request, res: Response) => { 
+export const getAllEmployeesByBusiness = async (req: Request, res: Response) => { 
   const { id } = req.params;
   try {
-      const services = await Service.findAll({ where: { id_business: id } });
-      return res.status(200).json(services);
+    const employees = await Employees.findAll({ where: { id_business: id } });
+      return res.status(200).json(employees);
   } catch (error) {
       console.error('Erro ao buscar serviços:', error);
       return res.status(500).json({ message: 'Erro interno do servidor.' });
