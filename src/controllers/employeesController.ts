@@ -13,8 +13,8 @@ export const registerEmployees = async (req: Request, res: Response) => {
     if (!idBusinessNum || !name || !specialization || isNaN(idBusinessNum)) return res.status(400).json({ message: 'Campos obrigatórios inválidos ou vazios!' });
     console.log('chegou aqui 1')
 
-    const existingBusiness = await Business.findOne({ where: { id: id_business } });
-    if (!existingBusiness) return res.status(400).json({ message: 'Negócio não existe!' });
+    // const existingBusiness = await Business.findOne({ where: { id: id_business } });
+    // if (!existingBusiness) return res.status(400).json({ message: 'Negócio não existe!' });
     console.log('chegou aqui 2')
 
     const existingEmployee = await Employees.findOne({ where: { name } });
