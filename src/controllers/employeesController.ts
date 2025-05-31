@@ -6,20 +6,16 @@ export const registerEmployees = async (req: Request, res: Response) => {
   try {
     const { id_business, name, summary, specialization } = req.body;
     const image = req.file ? `/uploads/employees/${req.file.filename}` : null;
-    console.log('chegou aqui 0')
 
     const idBusinessNum = Number(id_business);
 
     if (!idBusinessNum || !name || !specialization || isNaN(idBusinessNum)) return res.status(400).json({ message: 'Campos obrigatórios inválidos ou vazios!' });
-    console.log('chegou aqui 1')
 
-    // const existingBusiness = await Business.findOne({ where: { id: id_business } });
-    // if (!existingBusiness) return res.status(400).json({ message: 'Negócio não existe!' });
-    console.log('chegou aqui 2')
+    const existingBusiness = await Business.findOne({ where: { id: id_business } });
+    if (!existingBusiness) return res.status(400).json({ message: 'Negócio não existe!' });
 
-    // const existingEmployee = await Employees.findOne({ where: { name } });
-    // if (existingEmployee) return res.status(400).json({ message: 'Funcionário com esse nome já existe!' });
-    console.log('chegou aqui 3')
+    const existingEmployee = await Employees.findOne({ where: { name } });
+    if (existingEmployee) return res.status(400).json({ message: 'Funcionário com esse nome já existe!' });
 
     await Employees.create({
       id_business,
@@ -28,7 +24,6 @@ export const registerEmployees = async (req: Request, res: Response) => {
       summary,
       specialization
     });
-    console.log('chegou aqui 4')
 
     return res.status(200).json({ message: 'Cadastro realizado com sucesso!' });
   } catch (error) {
