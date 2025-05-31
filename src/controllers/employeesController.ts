@@ -5,9 +5,12 @@ import { Business } from "../models/Business";
 export const registerEmployees = async (req: Request, res: Response) => {
   try {
     const { id_business, name, summary, specialization } = req.body;
+    console.log('chegou aqui 1')
     const image = req.file ? `/uploads/employees/${req.file.filename}` : null;
+    console.log('chegou aqui 2')
 
     const idBusinessNum = Number(id_business);
+    console.log('chegou aqui 3')
 
     if (!idBusinessNum || !name || !specialization || isNaN(idBusinessNum)) {
       return res.status(400).json({ message: 'Campos obrigatórios inválidos ou vazios!' });

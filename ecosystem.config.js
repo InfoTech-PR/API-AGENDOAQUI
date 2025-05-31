@@ -8,7 +8,6 @@ module.exports = {
             env: {
                 NODE_ENV: "development"
             },
-            watch: true,
             ignore_watch: ["node_modules", "logs"],
             error_file: "logs/error.log",
             out_file: "logs/out.log",
