@@ -17,8 +17,8 @@ export const registerEmployees = async (req: Request, res: Response) => {
     // if (!existingBusiness) return res.status(400).json({ message: 'Negócio não existe!' });
     console.log('chegou aqui 2')
 
-    const existingEmployee = await Employees.findOne({ where: { name } });
-    if (existingEmployee) return res.status(400).json({ message: 'Funcionário com esse nome já existe!' });
+    // const existingEmployee = await Employees.findOne({ where: { name } });
+    // if (existingEmployee) return res.status(400).json({ message: 'Funcionário com esse nome já existe!' });
     console.log('chegou aqui 3')
 
     await Employees.create({
